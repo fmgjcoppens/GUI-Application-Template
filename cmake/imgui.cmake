@@ -25,5 +25,9 @@ set(SOURCES
 
 add_library(imgui STATIC ${SOURCES})
 
+# Set the location of the static library archive to match CPM's structure. 
+set_target_properties(imgui PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${imgui_BINARY_DIR})
+
 # Use PUBLIC scope to make include files available to the parent project.
 target_include_directories(imgui PUBLIC ${INCLUDES})
