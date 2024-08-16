@@ -2,21 +2,29 @@ cmake_minimum_required(VERSION 3.30 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 20)
 project(GUIApplicationTemplate LANGUAGES CXX)
 
+# The main build target (it is nice if the main target is defined first because
+# the nvim-cmake plugin picks the first one from the Ninja build script).
+add_executable(GAT src/main.cpp)
+target_link_libraries(GAT
+    Vulkan::Vulkan
+    glfw
+    imgui)
+
+# Dependencies
+## The Vulkan SDK should be available on the system
 find_package(Vulkan REQUIRED)
 
-add_executable(GAT src/main.cpp)
-
+## Load CMake Package Manager
 include(cmake/CPM.cmake)
+
+## Pull in and build glfw
 CPMAddPackage(
     NAME glfw
     GITHUB_REPOSITORY glfw/glfw
     GIT_TAG 3.4
     OPTIONS "GLFW_BUILD_DOCS OFF" "GLFW_BUILD_TESTS OFF" "GLFW_BUILD_EXAMPLES OFF")
 
+## Pull in ImGui/docking branch, but don't build it (not a CMake project)
 CPMAddPackage("gh:ocornut/imgui#docking")
+## Build ImGui from the repo we just pulled
 include(cmake/imgui.cmake)
-
-target_link_libraries(GAT
-    Vulkan::Vulkan
-    glfw
-    imgui)
