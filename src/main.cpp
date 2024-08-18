@@ -3,31 +3,6 @@
 //#include <fmt/core.h>
 #include "spdlog/spdlog.h"
 
-
-
-// Data
-//VkAllocationCallbacks*   g_Allocator = nullptr;
-//VkInstance               g_Instance = VK_NULL_HANDLE;
-//VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
-//VkDevice                 g_Device = VK_NULL_HANDLE;
-//uint32_t                 g_QueueFamily = (uint32_t)-1;
-//VkQueue                  g_Queue = VK_NULL_HANDLE;
-VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
-VkPipelineCache          g_PipelineCache = VK_NULL_HANDLE;
-//VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
-
-//ImGui_ImplVulkanH_Window g_MainWindowData;
-//int                      g_MinImageCount = 2;
-//bool                     g_SwapChainRebuild = false;
-
-
-
-
-
-
-
-
-
 // Main code
 int main(int, char**)
 {
@@ -87,6 +62,7 @@ int main(int, char**)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
+    VkPipelineCache g_PipelineCache = VK_NULL_HANDLE;
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForVulkan(window, true);
     ImGui_ImplVulkan_InitInfo init_info = {};

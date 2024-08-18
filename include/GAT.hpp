@@ -17,6 +17,7 @@
 //#define APP_USE_UNLIMITED_FRAME_RATE
 #ifdef _DEBUG
 #define APP_USE_VULKAN_DEBUG_REPORT
+VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
 #endif
 
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
