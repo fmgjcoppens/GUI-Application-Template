@@ -6,8 +6,13 @@ project(GUIApplicationTemplate LANGUAGES CXX)
 ## MAIN TARGE  ##
 #################
 # The main build target (it is nice if the main target is defined first because
-# the nvim-cmL
-add_executable(GAT src/main.cpp)
+# the nvim-cmake plugin picks the first one from the Ninja build script).
+add_executable(GAT
+    src/main.cpp
+    src/GAT.cpp)
+
+target_include_directories(GAT PRIVATE include)
+
 target_link_libraries(GAT
     Vulkan::Vulkan
     glfw
