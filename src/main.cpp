@@ -1,27 +1,9 @@
 #include "GAT.hpp"
 
-#include <fmt/core.h>
+//#include <fmt/core.h>
 #include "spdlog/spdlog.h"
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_vulkan.h"
-#include <stdio.h>          // printf, fprintf
-#include <stdlib.h>         // abort
-#define GLFW_INCLUDE_NONE
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
 
-// Volk headers
-#ifdef IMGUI_IMPL_VULKAN_USE_VOLK
-#define VOLK_IMPLEMENTATION
-#include <volk.h>
-#endif
-
-//#define APP_USE_UNLIMITED_FRAME_RATE
-#ifdef _DEBUG
-#define APP_USE_VULKAN_DEBUG_REPORT
-#endif
 
 // Data
 //VkAllocationCallbacks*   g_Allocator = nullptr;

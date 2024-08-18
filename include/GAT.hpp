@@ -3,6 +3,21 @@
 #include <stdlib.h>         // abort
 #include "imgui.h"
 #include "imgui_impl_vulkan.h"
+#include "imgui_impl_glfw.h"
+#define GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+// Volk headers
+#ifdef IMGUI_IMPL_VULKAN_USE_VOLK
+#define VOLK_IMPLEMENTATION
+#include <volk.h>
+#endif
+
+//#define APP_USE_UNLIMITED_FRAME_RATE
+#ifdef _DEBUG
+#define APP_USE_VULKAN_DEBUG_REPORT
+#endif
 
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
 VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
