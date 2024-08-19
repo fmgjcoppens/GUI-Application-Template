@@ -6,6 +6,10 @@
 // Main code
 int main(int, char**)
 {
+
+    VkInstance g_Instance = VK_NULL_HANDLE;
+
+
     spdlog::info("GUI Application started!");
 
     glfwSetErrorCallback(glfw_error_callback);
@@ -26,7 +30,7 @@ int main(int, char**)
     const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
     for (uint32_t i = 0; i < extensions_count; i++)
         extensions.push_back(glfw_extensions[i]);
-    SetupVulkan(extensions);
+    SetupVulkan(g_Instance, extensions);
 
     // Create Window Surface
     VkSurfaceKHR surface;
@@ -37,7 +41,7 @@ int main(int, char**)
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     ImGui_ImplVulkanH_Window* wd = &g_MainWindowData;
-    SetupVulkanWindow(wd, surface, w, h);
+    SetupVulkanWindow(g_Instance, wd, surface, w, h);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -216,8 +220,8 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    CleanupVulkanWindow();
-    CleanupVulkan();
+    CleanupVulkanWindow(g_Instance);
+    CleanupVulkan(g_Instance);
 
     glfwDestroyWindow(window);
     glfwTerminate();

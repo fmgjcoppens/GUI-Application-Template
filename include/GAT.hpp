@@ -51,8 +51,7 @@ bool IsExtensionAvailable(const ImVector<VkExtensionProperties>& properties, con
     return false;
 }
 
-VkInstance               g_Instance = VK_NULL_HANDLE;
-VkPhysicalDevice SetupVulkan_SelectPhysicalDevice()
+VkPhysicalDevice SetupVulkan_SelectPhysicalDevice(VkInstance& g_Instance)
 {
     uint32_t gpu_count;
     VkResult err = vkEnumeratePhysicalDevices(g_Instance, &gpu_count, nullptr);
@@ -88,7 +87,7 @@ VkDevice                 g_Device = VK_NULL_HANDLE;
 VkQueue                  g_Queue = VK_NULL_HANDLE;
 VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
 
-void SetupVulkan(ImVector<const char*> instance_extensions)
+void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions)
 {
     VkResult err;
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -151,7 +150,7 @@ void SetupVulkan(ImVector<const char*> instance_extensions)
     }
 
     // Select Physical Device (GPU)
-    g_PhysicalDevice = SetupVulkan_SelectPhysicalDevice();
+    g_PhysicalDevice = SetupVulkan_SelectPhysicalDevice(g_Instance);
 
     // Select graphics queue family
     {
@@ -224,7 +223,7 @@ void SetupVulkan(ImVector<const char*> instance_extensions)
 // All the ImGui_ImplVulkanH_XXX structures/functions are optional helpers used by the demo.
 // Your real engine/app may not use them.
 int                      g_MinImageCount = 2;
-void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height)
+void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height)
 {
     wd->Surface = surface;
 
@@ -256,7 +255,7 @@ void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int w
     ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
 }
 
-void CleanupVulkan()
+void CleanupVulkan(VkInstance& g_Instance)
 {
     vkDestroyDescriptorPool(g_Device, g_DescriptorPool, g_Allocator);
 
@@ -271,7 +270,7 @@ void CleanupVulkan()
 }
 
 ImGui_ImplVulkanH_Window g_MainWindowData;
-void CleanupVulkanWindow()
+void CleanupVulkanWindow(VkInstance& g_Instance)
 {
     ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
 }
