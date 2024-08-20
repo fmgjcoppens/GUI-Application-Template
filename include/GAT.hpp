@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <stdio.h>          // printf, fprintf
 #include <vulkan/vulkan_core.h>
 #include <stdlib.h>         // abort
@@ -80,14 +81,11 @@ VkPhysicalDevice SetupVulkan_SelectPhysicalDevice(VkInstance& g_Instance)
     return VK_NULL_HANDLE;
 }
 
-//VkAllocationCallbacks*   g_Allocator = nullptr;
-//VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
-uint32_t                 g_QueueFamily = (uint32_t)-1;
 VkDevice                 g_Device = VK_NULL_HANDLE;
 VkQueue                  g_Queue = VK_NULL_HANDLE;
 VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
 
-void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice)
+void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily)
 {
     VkResult err;
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -223,7 +221,7 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
 // All the ImGui_ImplVulkanH_XXX structures/functions are optional helpers used by the demo.
 // Your real engine/app may not use them.
 int                      g_MinImageCount = 2;
-void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice)
+void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily)
 {
     wd->Surface = surface;
 

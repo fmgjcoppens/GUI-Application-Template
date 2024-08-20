@@ -9,6 +9,7 @@ int main(int, char**)
     VkInstance g_Instance = VK_NULL_HANDLE;
     VkAllocationCallbacks* g_Allocator = nullptr;
     VkPhysicalDevice g_PhysicalDevice = VK_NULL_HANDLE;
+    uint32_t g_QueueFamily = (uint32_t)-1;
 
     spdlog::info("GUI Application started!");
 
@@ -30,7 +31,7 @@ int main(int, char**)
     const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
     for (uint32_t i = 0; i < extensions_count; i++)
         extensions.push_back(glfw_extensions[i]);
-    SetupVulkan(g_Instance, extensions, g_Allocator, g_PhysicalDevice);
+    SetupVulkan(g_Instance, extensions, g_Allocator, g_PhysicalDevice, g_QueueFamily);
 
     // Create Window Surface
     VkSurfaceKHR surface;
@@ -41,7 +42,7 @@ int main(int, char**)
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     ImGui_ImplVulkanH_Window* wd = &g_MainWindowData;
-    SetupVulkanWindow(g_Instance, wd, surface, w, h, g_Allocator, g_PhysicalDevice);
+    SetupVulkanWindow(g_Instance, wd, surface, w, h, g_Allocator, g_PhysicalDevice, g_QueueFamily);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
