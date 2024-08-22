@@ -13,6 +13,8 @@ int main(int, char**)
     VkDevice g_Device = VK_NULL_HANDLE;
     VkQueue g_Queue = VK_NULL_HANDLE;
     VkDescriptorPool g_DescriptorPool = VK_NULL_HANDLE;
+    int g_MinImageCount = 2;
+    ImGui_ImplVulkanH_Window g_MainWindowData;
 
     spdlog::info("GUI Application started!");
 
@@ -45,7 +47,7 @@ int main(int, char**)
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     ImGui_ImplVulkanH_Window* wd = &g_MainWindowData;
-    SetupVulkanWindow(g_Instance, wd, surface, w, h, g_Allocator, g_PhysicalDevice, g_QueueFamily, g_Device);
+    SetupVulkanWindow(g_Instance, wd, surface, w, h, g_Allocator, g_PhysicalDevice, g_QueueFamily, g_Device, g_MinImageCount);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -224,7 +226,7 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    CleanupVulkanWindow(g_Instance, g_Allocator, g_Device);
+    CleanupVulkanWindow(g_Instance, g_Allocator, g_Device, g_MainWindowData);
     CleanupVulkan(g_Instance, g_Allocator, g_Device, g_DescriptorPool);
 
     glfwDestroyWindow(window);

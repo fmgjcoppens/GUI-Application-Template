@@ -216,8 +216,7 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
 
 // All the ImGui_ImplVulkanH_XXX structures/functions are optional helpers used by the demo.
 // Your real engine/app may not use them.
-int                      g_MinImageCount = 2;
-void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device)
+void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, int g_MinImageCount)
 {
     wd->Surface = surface;
 
@@ -263,8 +262,7 @@ void CleanupVulkan(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, V
     vkDestroyInstance(g_Instance, g_Allocator);
 }
 
-ImGui_ImplVulkanH_Window g_MainWindowData;
-void CleanupVulkanWindow(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device)
+void CleanupVulkanWindow(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device, ImGui_ImplVulkanH_Window g_MainWindowData)
 {
     ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
 }
