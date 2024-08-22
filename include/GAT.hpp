@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <stdio.h>          // printf, fprintf
 #include <vulkan/vulkan_core.h>
 #include <stdlib.h>         // abort
 #include "imgui.h"
@@ -19,7 +18,7 @@
 //#define APP_USE_UNLIMITED_FRAME_RATE
 #ifdef _DEBUG
 #define APP_USE_VULKAN_DEBUG_REPORT
-VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
+VkDebugReportCallbackEXT g_DebugReport;
 #endif
 
 #ifdef APP_USE_VULKAN_DEBUG_REPORT

@@ -1,4 +1,18 @@
 #include "GAT.hpp"
+#include <stdio.h>          // printf, fprintf
+
+#ifdef _DEBUG
+g_DebugReport = VK_NULL_HANDLE;
+#endif
+
+#ifdef APP_USE_VULKAN_DEBUG_REPORT
+VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
+{
+    (void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
+    fprintf(stderr, "[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
+    return VK_FALSE;
+}
+#endif // APP_USE_VULKAN_DEBUG_REPORT
 
 void glfw_error_callback(int error, const char* description)
 {
