@@ -10,6 +10,7 @@ int main(int, char**)
     VkAllocationCallbacks* g_Allocator = nullptr;
     VkPhysicalDevice g_PhysicalDevice = VK_NULL_HANDLE;
     uint32_t g_QueueFamily = (uint32_t)-1;
+    VkDevice g_Device = VK_NULL_HANDLE;
 
     spdlog::info("GUI Application started!");
 
@@ -31,7 +32,7 @@ int main(int, char**)
     const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
     for (uint32_t i = 0; i < extensions_count; i++)
         extensions.push_back(glfw_extensions[i]);
-    SetupVulkan(g_Instance, extensions, g_Allocator, g_PhysicalDevice, g_QueueFamily);
+    SetupVulkan(g_Instance, extensions, g_Allocator, g_PhysicalDevice, g_QueueFamily, g_Device);
 
     // Create Window Surface
     VkSurfaceKHR surface;
@@ -42,7 +43,7 @@ int main(int, char**)
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     ImGui_ImplVulkanH_Window* wd = &g_MainWindowData;
-    SetupVulkanWindow(g_Instance, wd, surface, w, h, g_Allocator, g_PhysicalDevice, g_QueueFamily);
+    SetupVulkanWindow(g_Instance, wd, surface, w, h, g_Allocator, g_PhysicalDevice, g_QueueFamily, g_Device);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -200,7 +201,7 @@ int main(int, char**)
         wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
         wd->ClearValue.color.float32[3] = clear_color.w;
         if (!main_is_minimized)
-            FrameRender(wd, main_draw_data);
+            FrameRender(wd, main_draw_data, g_Device);
 
         // Update and Render additional Platform Windows
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -221,8 +222,8 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    CleanupVulkanWindow(g_Instance, g_Allocator);
-    CleanupVulkan(g_Instance, g_Allocator);
+    CleanupVulkanWindow(g_Instance, g_Allocator, g_Device);
+    CleanupVulkan(g_Instance, g_Allocator, g_Device);
 
     glfwDestroyWindow(window);
     glfwTerminate();
