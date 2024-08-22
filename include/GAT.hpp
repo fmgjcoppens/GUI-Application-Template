@@ -81,10 +81,9 @@ VkPhysicalDevice SetupVulkan_SelectPhysicalDevice(VkInstance& g_Instance)
     return VK_NULL_HANDLE;
 }
 
-VkQueue                  g_Queue = VK_NULL_HANDLE;
 VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
 
-void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device)
+void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, VkQueue& g_Queue)
 {
     VkResult err;
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -273,7 +272,7 @@ void CleanupVulkanWindow(VkInstance& g_Instance, VkAllocationCallbacks* g_Alloca
 }
 
 bool                     g_SwapChainRebuild = false;
-void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& g_Device)
+void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& g_Device, VkQueue& g_Queue)
 {
     VkResult err;
 
@@ -340,7 +339,7 @@ void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& 
     }
 }
 
-void FramePresent(ImGui_ImplVulkanH_Window* wd)
+void FramePresent(ImGui_ImplVulkanH_Window* wd, VkQueue& g_Queue)
 {
     if (g_SwapChainRebuild)
         return;

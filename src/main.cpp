@@ -11,6 +11,7 @@ int main(int, char**)
     VkPhysicalDevice g_PhysicalDevice = VK_NULL_HANDLE;
     uint32_t g_QueueFamily = (uint32_t)-1;
     VkDevice g_Device = VK_NULL_HANDLE;
+    VkQueue g_Queue = VK_NULL_HANDLE;
 
     spdlog::info("GUI Application started!");
 
@@ -32,7 +33,7 @@ int main(int, char**)
     const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
     for (uint32_t i = 0; i < extensions_count; i++)
         extensions.push_back(glfw_extensions[i]);
-    SetupVulkan(g_Instance, extensions, g_Allocator, g_PhysicalDevice, g_QueueFamily, g_Device);
+    SetupVulkan(g_Instance, extensions, g_Allocator, g_PhysicalDevice, g_QueueFamily, g_Device, g_Queue);
 
     // Create Window Surface
     VkSurfaceKHR surface;
@@ -201,7 +202,7 @@ int main(int, char**)
         wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
         wd->ClearValue.color.float32[3] = clear_color.w;
         if (!main_is_minimized)
-            FrameRender(wd, main_draw_data, g_Device);
+            FrameRender(wd, main_draw_data, g_Device, g_Queue);
 
         // Update and Render additional Platform Windows
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -212,7 +213,7 @@ int main(int, char**)
 
         // Present Main Platform Window
         if (!main_is_minimized)
-            FramePresent(wd);
+            FramePresent(wd, g_Queue);
     }
 
     // Cleanup
