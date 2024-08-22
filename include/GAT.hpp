@@ -81,9 +81,7 @@ VkPhysicalDevice SetupVulkan_SelectPhysicalDevice(VkInstance& g_Instance)
     return VK_NULL_HANDLE;
 }
 
-VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
-
-void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, VkQueue& g_Queue)
+void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, VkQueue& g_Queue, VkDescriptorPool& g_DescriptorPool)
 {
     VkResult err;
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -251,7 +249,7 @@ void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkS
     ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
 }
 
-void CleanupVulkan(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device)
+void CleanupVulkan(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device, VkDescriptorPool& g_DescriptorPool)
 {
     vkDestroyDescriptorPool(g_Device, g_DescriptorPool, g_Allocator);
 
