@@ -15,6 +15,7 @@ int main(int, char**)
     VkDescriptorPool g_DescriptorPool = VK_NULL_HANDLE;
     int g_MinImageCount = 2;
     ImGui_ImplVulkanH_Window g_MainWindowData;
+    bool g_SwapChainRebuild = false;
 
     spdlog::info("GUI Application started!");
 
@@ -205,7 +206,7 @@ int main(int, char**)
         wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
         wd->ClearValue.color.float32[3] = clear_color.w;
         if (!main_is_minimized)
-            FrameRender(wd, main_draw_data, g_Device, g_Queue);
+            FrameRender(wd, main_draw_data, g_Device, g_Queue, g_SwapChainRebuild);
 
         // Update and Render additional Platform Windows
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -216,7 +217,7 @@ int main(int, char**)
 
         // Present Main Platform Window
         if (!main_is_minimized)
-            FramePresent(wd, g_Queue);
+            FramePresent(wd, g_Queue, g_SwapChainRebuild);
     }
 
     // Cleanup

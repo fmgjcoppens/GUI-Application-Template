@@ -267,8 +267,7 @@ void CleanupVulkanWindow(VkInstance& g_Instance, VkAllocationCallbacks* g_Alloca
     ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
 }
 
-bool                     g_SwapChainRebuild = false;
-void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& g_Device, VkQueue& g_Queue)
+void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& g_Device, VkQueue& g_Queue, bool g_SwapChainRebuild)
 {
     VkResult err;
 
@@ -335,7 +334,7 @@ void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& 
     }
 }
 
-void FramePresent(ImGui_ImplVulkanH_Window* wd, VkQueue& g_Queue)
+void FramePresent(ImGui_ImplVulkanH_Window* wd, VkQueue& g_Queue, bool g_SwapChainRebuild)
 {
     if (g_SwapChainRebuild)
         return;
