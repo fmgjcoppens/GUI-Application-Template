@@ -1,23 +1,26 @@
 #include "GAT.hpp"
-#include <stdio.h>          // printf, fprintf
+#include <stdio.h> // printf, fprintf
 
 #ifdef _DEBUG
 g_DebugReport = VK_NULL_HANDLE;
 #endif
 
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
-VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
+VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object,
+    size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
 {
-    (void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
+    (void)flags;
+    (void)object;
+    (void)location;
+    (void)messageCode;
+    (void)pUserData;
+    (void)pLayerPrefix; // Unused arguments
     fprintf(stderr, "[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
     return VK_FALSE;
 }
 #endif // APP_USE_VULKAN_DEBUG_REPORT
 
-void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-}
+void glfw_error_callback(int error, const char* description) { fprintf(stderr, "GLFW Error %d: %s\n", error, description); }
 
 void check_vk_result(VkResult err)
 {
@@ -65,7 +68,8 @@ VkPhysicalDevice SetupVulkan_SelectPhysicalDevice(VkInstance& g_Instance)
     return VK_NULL_HANDLE;
 }
 
-void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, VkQueue& g_Queue, VkDescriptorPool& g_DescriptorPool)
+void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensions, VkAllocationCallbacks* g_Allocator,
+    VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, VkQueue& g_Queue, VkDescriptorPool& g_DescriptorPool)
 {
     VkResult err;
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -98,7 +102,7 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
 
         // Enabling validation layers
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
-        const char* layers[] = { "VK_LAYER_KHRONOS_validation" };
+        const char* layers[] = {"VK_LAYER_KHRONOS_validation"};
         create_info.enabledLayerCount = 1;
         create_info.ppEnabledLayerNames = layers;
         instance_extensions.push_back("VK_EXT_debug_report");
@@ -115,11 +119,13 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
 
         // Setup the debug report callback
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
-        auto f_vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkCreateDebugReportCallbackEXT");
+        auto f_vkCreateDebugReportCallbackEXT =
+            (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkCreateDebugReportCallbackEXT");
         IM_ASSERT(f_vkCreateDebugReportCallbackEXT != nullptr);
         VkDebugReportCallbackCreateInfoEXT debug_report_ci = {};
         debug_report_ci.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
-        debug_report_ci.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT;
+        debug_report_ci.flags =
+            VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT;
         debug_report_ci.pfnCallback = debug_report;
         debug_report_ci.pUserData = nullptr;
         err = f_vkCreateDebugReportCallbackEXT(g_Instance, &debug_report_ci, g_Allocator, &g_DebugReport);
@@ -162,7 +168,7 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
             device_extensions.push_back(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME);
 #endif
 
-        const float queue_priority[] = { 1.0f };
+        const float queue_priority[] = {1.0f};
         VkDeviceQueueCreateInfo queue_info[1] = {};
         queue_info[0].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queue_info[0].queueFamilyIndex = g_QueueFamily;
@@ -183,9 +189,8 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
     // The example only requires a single combined image sampler descriptor for the font image and only uses one descriptor set (for that)
     // If you wish to load e.g. additional textures you may need to alter pools sizes.
     {
-        VkDescriptorPoolSize pool_sizes[] =
-        {
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+        VkDescriptorPoolSize pool_sizes[] = {
+            {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1},
         };
         VkDescriptorPoolCreateInfo pool_info = {};
         pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -200,7 +205,9 @@ void SetupVulkan(VkInstance& g_Instance, ImVector<const char*> instance_extensio
 
 // All the ImGui_ImplVulkanH_XXX structures/functions are optional helpers used by the demo.
 // Your real engine/app may not use them.
-void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height, VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device, int g_MinImageCount)
+void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height,
+    VkAllocationCallbacks* g_Allocator, VkPhysicalDevice& g_PhysicalDevice, uint32_t& g_QueueFamily, VkDevice& g_Device,
+    int g_MinImageCount)
 {
     wd->Surface = surface;
 
@@ -214,22 +221,25 @@ void SetupVulkanWindow(VkInstance& g_Instance, ImGui_ImplVulkanH_Window* wd, VkS
     }
 
     // Select Surface Format
-    const VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
+    const VkFormat requestSurfaceImageFormat[] = {
+        VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM};
     const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-    wd->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(g_PhysicalDevice, wd->Surface, requestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
+    wd->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(g_PhysicalDevice, wd->Surface, requestSurfaceImageFormat,
+        (size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
 
     // Select Present Mode
 #ifdef APP_USE_UNLIMITED_FRAME_RATE
-    VkPresentModeKHR present_modes[] = { VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR, VK_PRESENT_MODE_FIFO_KHR };
+    VkPresentModeKHR present_modes[] = {VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR, VK_PRESENT_MODE_FIFO_KHR};
 #else
-    VkPresentModeKHR present_modes[] = { VK_PRESENT_MODE_FIFO_KHR };
+    VkPresentModeKHR present_modes[] = {VK_PRESENT_MODE_FIFO_KHR};
 #endif
     wd->PresentMode = ImGui_ImplVulkanH_SelectPresentMode(g_PhysicalDevice, wd->Surface, &present_modes[0], IM_ARRAYSIZE(present_modes));
-    //printf("[vulkan] Selected PresentMode = %d\n", wd->PresentMode);
+    // printf("[vulkan] Selected PresentMode = %d\n", wd->PresentMode);
 
     // Create SwapChain, RenderPass, Framebuffer, etc.
     IM_ASSERT(g_MinImageCount >= 2);
-    ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
+    ImGui_ImplVulkanH_CreateOrResizeWindow(
+        g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
 }
 
 void CleanupVulkan(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device, VkDescriptorPool& g_DescriptorPool)
@@ -238,7 +248,8 @@ void CleanupVulkan(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, V
 
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
     // Remove the debug report callback
-    auto f_vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkDestroyDebugReportCallbackEXT");
+    auto f_vkDestroyDebugReportCallbackEXT =
+        (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkDestroyDebugReportCallbackEXT");
     f_vkDestroyDebugReportCallbackEXT(g_Instance, g_DebugReport, g_Allocator);
 #endif // APP_USE_VULKAN_DEBUG_REPORT
 
@@ -246,7 +257,8 @@ void CleanupVulkan(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, V
     vkDestroyInstance(g_Instance, g_Allocator);
 }
 
-void CleanupVulkanWindow(VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device, ImGui_ImplVulkanH_Window g_MainWindowData)
+void CleanupVulkanWindow(
+    VkInstance& g_Instance, VkAllocationCallbacks* g_Allocator, VkDevice& g_Device, ImGui_ImplVulkanH_Window g_MainWindowData)
 {
     ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
 }
@@ -255,7 +267,7 @@ void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& 
 {
     VkResult err;
 
-    VkSemaphore image_acquired_semaphore  = wd->FrameSemaphores[wd->SemaphoreIndex].ImageAcquiredSemaphore;
+    VkSemaphore image_acquired_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].ImageAcquiredSemaphore;
     VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
     err = vkAcquireNextImageKHR(g_Device, wd->Swapchain, UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE, &wd->FrameIndex);
     if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR)
@@ -267,7 +279,7 @@ void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data, VkDevice& 
 
     ImGui_ImplVulkanH_Frame* fd = &wd->Frames[wd->FrameIndex];
     {
-        err = vkWaitForFences(g_Device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);    // wait indefinitely instead of periodically checking
+        err = vkWaitForFences(g_Device, 1, &fd->Fence, VK_TRUE, UINT64_MAX); // wait indefinitely instead of periodically checking
         check_vk_result(err);
 
         err = vkResetFences(g_Device, 1, &fd->Fence);
